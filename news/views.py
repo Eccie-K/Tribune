@@ -6,6 +6,10 @@ from .forms import NewsLetterForm,NewArticleForm
 from .email import send_welcome_email
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from .models import MoringaMerch
+from .serializer import MerchSerializer
 
 
 # Create your views here.
@@ -83,6 +87,13 @@ def new_article(request):
     else:
         form = NewArticleForm()
     return render(request, 'new_article.html', {"form": form})
+
+
+class MerchList(APIView):
+    def get(self, request, format=None):
+        all_merch = MoringaMerch.objects.all()
+        serializers = MerchSerializer(all_merch, many=True)
+        return Response(serializers.data)
 
 
 
